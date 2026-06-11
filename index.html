@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VoteDesk – Secure Voting System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- LOADING OVERLAY -->
+  <div id="screen-loading" class="screen active">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Connecting to database…</p>
+    </div>
+  </div>
+
+  <!-- LOGIN SCREEN -->
+  <div id="screen-login" class="screen">
+    <div class="login-card">
+      <div class="brand">
+        <span class="brand-icon">🗳</span>
+        <h1>VoteDesk</h1>
+        <p class="tagline">Secure · Simple · Transparent</p>
+      </div>
+      <div class="field">
+        <label for="login-id">Voter / Admin ID</label>
+        <input type="text" id="login-id" placeholder="Enter your ID" autocomplete="off" />
+      </div>
+      <button class="btn btn-primary" onclick="handleLogin()">Continue →</button>
+      <p id="login-error" class="error-msg hidden"></p>
+    </div>
+  </div>
+
+  <!-- VOTER SCREEN -->
+  <div id="screen-voter" class="screen">
+    <div class="page-wrap">
+      <header class="top-bar">
+        <span class="brand-sm">🗳 VoteDesk</span>
+        <button class="btn btn-ghost" onclick="logout()">Logout</button>
+      </header>
+      <div class="section-title">
+        <h2>Cast Your Vote</h2>
+        <p>Select one candidate below. Your vote is final.</p>
+      </div>
+      <div id="candidate-cards" class="candidate-grid"></div>
+      <p id="voter-msg" class="success-msg hidden"></p>
+    </div>
+  </div>
+
+  <!-- ADMIN SCREEN -->
+  <div id="screen-admin" class="screen">
+    <div class="page-wrap">
+      <header class="top-bar">
+        <span class="brand-sm">🗳 VoteDesk <span class="badge">Admin</span></span>
+        <button class="btn btn-ghost" onclick="logout()">Logout</button>
+      </header>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('tab-results', this)">📊 Results</button>
+        <button class="tab" onclick="showTab('tab-candidates', this)">🏅 Candidates</button>
+        <button class="tab" onclick="showTab('tab-voters', this)">👥 Voters</button>
+      </div>
+
+      <!-- Results Tab -->
+      <div id="tab-results" class="tab-content active">
+        <div class="section-title">
+          <h2>Live Results</h2>
+          <button class="btn btn-danger-sm" onclick="resetVotes()">🔄 Reset All Votes</button>
+        </div>
+        <div id="results-container" class="results-list"></div>
+      </div>
+
+      <!-- Candidates Tab -->
+      <div id="tab-candidates" class="tab-content">
+        <div class="section-title"><h2>Manage Candidates</h2></div>
+        <div class="card form-card">
+          <h3 id="candidate-form-title">Add Candidate</h3>
+          <div class="field">
+            <label>Name</label>
+            <input type="text" id="cand-name" placeholder="e.g. Alice Johnson" />
+          </div>
+          <div class="field">
+            <label>Party / Description</label>
+            <input type="text" id="cand-party" placeholder="e.g. Independent" />
+          </div>
+          <input type="hidden" id="cand-edit-id" value="" />
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveCandidate()">Save Candidate</button>
+            <button class="btn btn-ghost" onclick="cancelCandidateEdit()">Cancel</button>
+          </div>
+        </div>
+        <div id="candidates-list" class="manage-list"></div>
+      </div>
+
+      <!-- Voters Tab -->
+      <div id="tab-voters" class="tab-content">
+        <div class="section-title"><h2>Manage Voters</h2></div>
+        <div class="card form-card">
+          <h3 id="voter-form-title">Register Voter</h3>
+          <div class="field">
+            <label>Voter ID</label>
+            <input type="text" id="new-voter-id" placeholder="e.g. V2025001" />
+          </div>
+          <div class="field">
+            <label>Voter Name</label>
+            <input type="text" id="new-voter-name" placeholder="e.g. John Doe" />
+          </div>
+          <input type="hidden" id="voter-edit-row-id" value="" />
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveVoter()">Save Voter</button>
+            <button class="btn btn-ghost" onclick="cancelVoterEdit()">Cancel</button>
+          </div>
+        </div>
+        <div id="voters-list" class="manage-list"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
